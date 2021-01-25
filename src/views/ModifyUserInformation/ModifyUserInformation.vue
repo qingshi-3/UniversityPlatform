@@ -1,4 +1,5 @@
 <template>
+<!--  修改个人信息  -->
     <div id="user_information">
         <h2>个人资料</h2>
         <div id="information_content">
@@ -127,7 +128,7 @@
 
 <script>
     export default {
-        name: "modify_user_information",
+        name: "ModifyUserInformation",
         data: function () {
             return {
                 user_information: {

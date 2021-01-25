@@ -1,6 +1,6 @@
 <template>
     <el-menu :router="true" class="el-menu-demo" mode="horizontal">
-        <el-menu-item index="/modify_user_information" style="left: 50%">
+        <el-menu-item index="/modify/user/information" style="left: 50%">
             <h2>项目</h2>
         </el-menu-item>
         <el-menu-item index="/test" style="left: 52%">

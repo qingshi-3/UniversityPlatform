@@ -19,7 +19,7 @@ VueRouter.prototype.replace = function replace(location) {
 
 
 const Test = () => import('@/components/Test');
-const ModifyUserInformation = () => import('@/views/modify_user_information/ModifyUserInformation')
+const ModifyUserInformation = () => import('@/views/ModifyUserInformation/ModifyUserInformation')
 const Login = () => import('@/components/common/Login')
 const err = () => import('@/components/common/404')
 const Register = () => import('@/components/common/Register')
@@ -34,7 +34,7 @@ const routes = [
         component: Test
     },
     {
-        path: '/modify_user_information',
+        path: '/modify/user/information',
         component: ModifyUserInformation
     },
     {
