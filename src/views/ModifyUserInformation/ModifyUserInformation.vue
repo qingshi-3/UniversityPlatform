@@ -120,7 +120,7 @@
                 </el-col>
             </el-row>
         </div>
-        <div id="submit_button" style="padding-left: 90%">
+        <div id="submit_button" style="margin-right: 0;">
             <el-button v-on:click="save_modify" round style="width:200px;height:60px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);border-radius: 30px;">保存</el-button>
         </div>
     </div>

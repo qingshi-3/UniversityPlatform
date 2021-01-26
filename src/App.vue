@@ -1,7 +1,13 @@
 <template>
   <div id="app">
-    <MainTabBar></MainTabBar>
-    <router-view></router-view>
+    <el-container>
+      <el-header>
+        <MainTabBar style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"></MainTabBar>
+      </el-header>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -59,6 +65,6 @@
   }
   body{
     background-color: #f6f6f6;
-
+    width: 2020px;
   }
 </style>
