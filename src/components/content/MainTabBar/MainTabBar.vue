@@ -7,7 +7,7 @@
                 </el-menu-item>
             </el-col>
             <el-col :span="tabBarItemWidth">
-                <el-menu-item index="/test">
+                <el-menu-item index="/teacher/hall">
                     <h2>导师</h2>
                 </el-menu-item>
             </el-col>
@@ -38,7 +38,7 @@
             </el-col>
             <el-col :span="tabBarItemWidth">
                 <el-menu-item index="4">
-                    <i class="el-icon-bell"></i>
+                    <i class="el-icon-bell" style="padding-left: 35%"></i>
                 </el-menu-item>
             </el-col>
             <el-col :span="tabBarItemWidth">

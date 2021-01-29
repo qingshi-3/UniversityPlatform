@@ -23,6 +23,7 @@ const ModifyUserInformation = () => import('@/views/ModifyUserInformation/Modify
 const Login = () => import('@/components/common/Login')
 const err = () => import('@/components/common/404')
 const Register = () => import('@/components/common/Register')
+const TeacherHall = () => import('@/views/TeacherHall/TeacherHall')
 
 const routes = [
     {
@@ -48,6 +49,10 @@ const routes = [
     {
         path: '/register',
         component: Register
+    },
+    {
+        path: '/teacher/hall',
+        component:TeacherHall
     }
 ]
 

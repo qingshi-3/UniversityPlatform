@@ -10,16 +10,16 @@ const store = new Vuex.Store({
         is_login:false,
         is_register:false,
         colleges:[{
-            "collegeId" : 123454,
-            "collegeDescription" : "xxx"
+            "collegeId" : 1,
+            "collegeDescription" : "软件学院"
         },
             {
-                "collegeId" : 123454,
-                "collegeDescription" : "xxx"
+                "collegeId" : 2,
+                "collegeDescription" : "计算机学院"
             },
             {
-                "collegeId" : 123454,
-                "collegeDescription" : "xxx"
+                "collegeId" : 3,
+                "collegeDescription" : "阿松大"
             }],
         grades: [{
             "gradeId": 2018,
