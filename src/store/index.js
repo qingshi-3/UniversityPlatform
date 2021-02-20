@@ -9,39 +9,18 @@ const store = new Vuex.Store({
         logined:true,
         is_login:false,
         is_register:false,
-        colleges:[{
-            "collegeId" : 1,
-            "collegeDescription" : "软件学院"
+        current_university:{
+            id:null,
+            description:null
         },
-            {
-                "collegeId" : 2,
-                "collegeDescription" : "计算机学院"
-            },
-            {
-                "collegeId" : 3,
-                "collegeDescription" : "阿松大"
-            }],
-        grades: [{
-            "gradeId": 2018,
-        },
-            {
-                "gradeId": 2019,
-            },
-            {
-                "gradeId": 2020,
-            }],
-        universities:[{
-            "universityId" : 1234564234,
-            "universityDescription" : "北京大学"
-        },
-            {
-                "universityId" : 1234564234,
-                "universityDescription" : "四川大学"
-            },
-            {
-                "universityId" : 1234564234,
-                "universityDescription" : "四川大学"
-            }]
+        current_user_data:null,
+        directions:[],
+        colleges:[],
+        grades: [],
+        subjects:[],
+        universities:[],
+        active:"idea",
+        projectStatus:["可加入","不可加入"]
     },
     getters:{
         logined: state => {
@@ -49,6 +28,14 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        changeUniversity(state,university){
+            state.universities = university;
+        }
+    },
+    actions:{
+        changeUniversity(ctx,university){
+            ctx.commit("changeUniversity",university)
+        }
     }
 });
 

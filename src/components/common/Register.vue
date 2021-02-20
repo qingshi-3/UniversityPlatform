@@ -1,9 +1,9 @@
 <template>
-    <el-dialog :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" title="register" :visible.sync="this.$store.state.is_register" width="25%" :center="true">
+    <el-dialog class="dialog" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" title="register" :visible.sync="this.$store.state.is_register" width="25%" :center="true">
         <el-form :rules="rules" :model="register_form" ref="register_form">
             <el-form-item prop="phone" :label-width="formLabelWidth">
                 <el-row>
-                    <el-col :pull="6" :span="2" style="text-align: center;">
+                    <el-col :pull="7" :span="2" style="text-align: center;">
                         <label>手机</label>
                     </el-col>
                     <el-col :span="22" :pull="4">
@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item prop="password" :label-width="formLabelWidth">
                 <el-row>
-                    <el-col :pull="6" :span="2" style="text-align: center;">
+                    <el-col :pull="7" :span="2" style="text-align: center;">
                         <label>密码</label>
                     </el-col>
                     <el-col :span="22" :pull="4">
@@ -23,7 +23,7 @@
             </el-form-item>
             <el-form-item prop="confirmPassword" :label-width="formLabelWidth">
                 <el-row>
-                    <el-col :pull="6" :span="2" style="text-align: center;">
+                    <el-col :pull="7" :span="2" style="text-align: center;">
                         <label>确认密码</label>
                     </el-col>
                     <el-col :span="22" :pull="4">
@@ -33,7 +33,7 @@
             </el-form-item>
             <el-form-item prop="university" :label-width="formLabelWidth">
                 <el-row>
-                    <el-col :pull="6" :span="2" style="text-align: center;">
+                    <el-col :pull="7" :span="2" style="text-align: center;">
                         <label>高校</label>
                     </el-col>
                     <el-col :span="22" :pull="4">
@@ -50,7 +50,7 @@
             </el-form-item>
             <el-form-item prop="college" :label-width="formLabelWidth">
                 <el-row>
-                    <el-col :pull="6" :span="2" style="text-align: center;">
+                    <el-col :pull="7" :span="2" style="text-align: center;">
                         <label>学院</label>
                     </el-col>
                     <el-col :span="22" :pull="4">
@@ -67,7 +67,7 @@
             </el-form-item>
             <el-form-item prop="gradeId" :label-width="formLabelWidth" >
                 <el-row>
-                    <el-col :pull="6" :span="2" style="text-align: center;">
+                    <el-col :pull="7" :span="2" style="text-align: center;">
                         <label>年级</label>
                     </el-col>
                     <el-col :span="22" :pull="4">
@@ -84,7 +84,7 @@
             </el-form-item>
             <el-form-item prop="school_no" :label-width="formLabelWidth" >
                 <el-row>
-                    <el-col :pull="6" :span="2" style="text-align: center;">
+                    <el-col :pull="7" :span="2" style="text-align: center;">
                         <label>学/工号</label>
                     </el-col>
                     <el-col :span="22" :pull="4">
@@ -94,7 +94,7 @@
             </el-form-item>
             <el-form-item prop="name" :label-width="formLabelWidth">
                 <el-row>
-                    <el-col :pull="6" :span="2" style="text-align: center;">
+                    <el-col :pull="7" :span="2" style="text-align: center;">
                         <label>姓名</label>
                     </el-col>
                     <el-col :span="22" :pull="4">
@@ -104,7 +104,7 @@
             </el-form-item>
             <el-form-item prop="role" :label-width="formLabelWidth">
                 <el-row>
-                    <el-col :pull="6" :span="4"><el-radio v-model="register_form.role" label="1">教师</el-radio></el-col>
+                    <el-col :pull="7" :span="4"><el-radio v-model="register_form.role" label="1">教师</el-radio></el-col>
                     <el-col :pull="4" :span="4"><el-radio v-model="register_form.role" label="2">学生</el-radio></el-col>
                 </el-row>
             </el-form-item>
@@ -116,6 +116,8 @@
 </template>
 
 <script>
+    import getIdByDescription from "@/methods/getIdByDescription";
+
     export default {
         name: "Register",
         data: function () {
@@ -187,27 +189,13 @@
                     ]
                 }
             }
-
         },
         methods: {
             register(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        this.$emit('register')
-                        //提交表单
-                        let universityId,collegeId;
-                        for (let i = 0; i <this.$store.state.universities.length ; i++) {
-                            if (this.$store.state.universities[i].universityDescription===this.register_form.university){
-                                universityId = this.$store.state.universities[i].universityId;
-                                break;
-                            }
-                        }
-                        for (let i = 0; i <this.$store.state.colleges.length ; i++) {
-                            if (this.$store.state.colleges[i].collegeDescription===this.register_form.college){
-                                collegeId = this.$store.state.colleges[i].collegeId;
-                                break;
-                            }
-                        }
+                        let universityId = getIdByDescription("university",this.register_form.university);
+                        let collegeId = getIdByDescription("college",this.register_form.college)
                         alert(universityId + " " + collegeId)
                         this.$axios({
                             url: "api/register",
@@ -223,12 +211,25 @@
                                 gradeId:this.register_form.gradeId
                             }
                         }).then(res => {
-                            console.log(res)
+                            console.log("手动注册"+res)
                             this.$store.state.logined = false;
                             alert('注册成功');
+                            this.$axios({
+                                url:'/api/user/my',
+                                method:'get',
+                                params:{
+                                    userId:this.$myCookie.get("userId")
+                                }
+                            }).then(res=> {
+                                console.log("当前用户信息"+JSON.stringify(res))
+                                this.$store.state.current_user_data = res.data.data
+                                this.$store.state.current_university.id=this.$store.state.current_user_data.universityId;
+                                this.$store.state.current_university.description=this.$store.state.current_user_data.universityDescription;
+                            }).catch(err=>{
+                                console.log(err)
+                            })
                         }).catch(error => {
                             alert('注册失败');
-                            // this.$emit('register_fail')
                             this.$store.state.is_register=true;
                             console.log(error);
                         });
@@ -249,5 +250,7 @@
 </script>
 
 <style scoped>
-
+    .dialog{
+        width: 2000px;
+    }
 </style>

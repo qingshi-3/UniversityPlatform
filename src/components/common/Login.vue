@@ -1,5 +1,5 @@
 <template>
-    <el-dialog  :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" title="login" :visible.sync="this.$store.state.is_login" width="25%" :center="true">
+    <el-dialog class="dialog" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" title="login" :visible.sync="this.$store.state.is_login" width="25%" :center="true">
         <!--                    <el-button style="margin-left: 40%;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)" round>login</el-button>-->
         <el-form :rules="rules" :model="login_form"  ref="login_form">
             <el-form-item prop="phone" :label-width="formLabelWidth">
@@ -81,13 +81,24 @@
                                 password:"123456780", //this.login_form.password
                             }
                         }).then(res => {
+                            console.log("手动登录"+res)
                             this.$store.state.logined = false;
-                            alert('登陆成功'+res);
-                            console.log(this.$myCookie.get('tokenId'));
-                            //设置tokenId
+                            this.$axios({
+                                url:'/api/user/my',
+                                method:'get',
+                                params:{
+                                    userId:this.$myCookie.get("userId")
+                                }
+                            }).then(res=> {
+                                console.log("当前用户信息"+JSON.stringify(res))
+                                this.$store.state.current_user_data = res.data.data
+                                this.$store.state.current_university.id=this.$store.state.current_user_data.universityId;
+                                this.$store.state.current_university.description=this.$store.state.current_user_data.universityDescription;
+                            }).catch(err=>{
+                                console.log(err)
+                            })
                         }).catch(error => {
                             alert('账号或密码错误');
-                            // this.$emit('login_fail')
                             this.$store.state.is_login=true;
                             console.log(error);
                         });
@@ -106,5 +117,7 @@
 </script>
 
 <style scoped>
-
+    .dialog{
+        width: 2000px;
+    }
 </style>

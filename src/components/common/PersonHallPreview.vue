@@ -1,22 +1,25 @@
 <template>
     <!--  导师大厅、同学大厅的预览  -->
-    <div id="box">
+    <div id="box" @click="viewPersonHomePage()">
         <el-row>
             <el-col :span="10">
                 <el-row style="padding:20px 20px 20px 20px;">
-                    <h1 v-text="teacher.name"></h1>
+                    <h1 v-text="person.name"></h1>
                 </el-row>
                 <el-row style="padding:20px 20px 20px 20px;">
-                    <span v-text="teacher.college"></span>
+                    <span v-text="person.collegeDescription"></span>
                 </el-row>
             </el-col>
             <el-col :span="6" :offset="4">
-                <el-avatar :size="140" :src="teacher.avatarUrl"></el-avatar>
+                <el-avatar :size="140" :src="person.avatarUrl"></el-avatar>
             </el-col>
         </el-row>
         <el-row id="directions">
-            <el-col :span="8" v-for="item in teacher.direction" :key="item">
-                <DirectionTag  :content="item"></DirectionTag>
+            <el-col :span="7" v-for="item in directions" :key="item.directionId">
+                <DirectionTag  :content="item.directionDescription"></DirectionTag>
+            </el-col>
+            <el-col :span="3" v-if="moreThanThree">
+                ...
             </el-col>
         </el-row>
     </div>
@@ -29,13 +32,34 @@
         components: {DirectionTag},
         data(){
             return {
-
+                moreThanThree:false
             }
         },
         props:{
-            teacher:Object
+            person:Object,
+            role:String
+        },
+        methods:{
+            viewPersonHomePage(){
+                if (this.role==="teacher")
+                    this.$router.push({ path: '/teacherHomePage', query: { teacherId: this.person.userId } })
+                else
+                    this.$router.push({ path: '/classMateHomePage', query: { studentId: this.person.userId } })
+            }
+        },
+        computed:{
+            directions() {
+                let _this = this;
+                let directions = _this.person.directions;
+                if (directions.length>2){
+                    _this.moreThanThree = true;
+                    directions = directions.slice(0,3);
+                }
+                return directions;
+            }
         }
     }
+
 </script>
 
 <style scoped>

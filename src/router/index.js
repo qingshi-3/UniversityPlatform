@@ -24,6 +24,12 @@ const Login = () => import('@/components/common/Login')
 const err = () => import('@/components/common/404')
 const Register = () => import('@/components/common/Register')
 const TeacherHall = () => import('@/views/TeacherHall/TeacherHall')
+const TeacherHomePage = () => import('@/views/TeacherHall/TeacherHomePage')
+const ClassMateHall = () => import('@/views/ClassMateHall/ClassMateHall')
+const ClassMateHomePage = () => import('@/views/ClassMateHall/ClassMateHomePage')
+const ProjectHomePage = () => import('@/views/ProjectHall/ProjectHomePage')
+const ProjectHall = () => import('@/views/ProjectHall/ProjectHall')
+const ManageMyIdeaOrProject = () => import('@/views/ManageMyIdeaOrProject/ManageMyIdeaOrProject')
 
 const routes = [
     {
@@ -31,11 +37,35 @@ const routes = [
         redirect: ''
     },
     {
+      path: '/manageMyIdeaOrProject',
+      component :ManageMyIdeaOrProject
+    },
+    {
+        path: '/classMateHomePage',
+        component: ClassMateHomePage
+    },
+    {
+        path: '/projectHall',
+        component: ProjectHall
+    },
+    {
+        path: '/projectHomePage',
+        component: ProjectHomePage
+    },
+    {
+        path: '/teacherHomePage',
+        component: TeacherHomePage
+    },
+    {
+        path: '/classMateHall',
+        component: ClassMateHall
+    },
+    {
         path: '/test',
         component: Test
     },
     {
-        path: '/modify/user/information',
+        path: '/modifyUserInformation',
         component: ModifyUserInformation
     },
     {
@@ -51,8 +81,8 @@ const routes = [
         component: Register
     },
     {
-        path: '/teacher/hall',
-        component:TeacherHall
+        path: '/teacherHall',
+        component: TeacherHall
     }
 ]
 
