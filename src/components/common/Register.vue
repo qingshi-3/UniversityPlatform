@@ -42,7 +42,7 @@
                                     v-for="item in this.$store.state.universities"
                                     :key="item.universityId"
                                     :label="item.universityDescription"
-                                    :value="item.universityDescription">
+                                    :value="item.universityId">
                             </el-option>
                         </el-select>
                     </el-col>
@@ -59,7 +59,7 @@
                                     v-for="item in this.$store.state.colleges"
                                     :key="item.collegeId"
                                     :label="item.collegeDescription"
-                                    :value="item.collegeDescription">
+                                    :value="item.collegeId">
                             </el-option>
                         </el-select>
                     </el-col>
@@ -116,8 +116,6 @@
 </template>
 
 <script>
-    import getIdByDescription from "@/methods/getIdByDescription";
-
     export default {
         name: "Register",
         data: function () {
@@ -194,42 +192,43 @@
             register(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        let universityId = getIdByDescription("university",this.register_form.university);
-                        let collegeId = getIdByDescription("college",this.register_form.college)
-                        alert(universityId + " " + collegeId)
+                        alert(this.register_form.university + " " + this.register_form.college)
                         this.$axios({
                             url: "api/register",
                             method: "post",
                             params: {
                                 phone:this.register_form.phone,
                                 password:this.register_form.password,
-                                universityId: universityId,
+                                universityId: this.register_form.university,
                                 schoolNo:this.register_form.school_no,
                                 role:this.register_form.role,
                                 name:this.register_form.name,
-                                collegeId:collegeId,
+                                collegeId:this.register_form.college,
                                 gradeId:this.register_form.gradeId
                             }
                         }).then(res => {
-                            console.log("手动注册"+res)
+                            console.log("手动注册"+JSON.stringify(res))
                             this.$store.state.logined = false;
-                            alert('注册成功');
-                            this.$axios({
-                                url:'/api/user/my',
-                                method:'get',
-                                params:{
-                                    userId:this.$myCookie.get("userId")
-                                }
-                            }).then(res=> {
-                                console.log("当前用户信息"+JSON.stringify(res))
-                                this.$store.state.current_user_data = res.data.data
-                                this.$store.state.current_university.id=this.$store.state.current_user_data.universityId;
-                                this.$store.state.current_university.description=this.$store.state.current_user_data.universityDescription;
-                            }).catch(err=>{
-                                console.log(err)
-                            })
+                            if (res.data.code!==404){
+                                alert('注册成功');
+                                this.$axios({
+                                    url:'/api/user/my',
+                                    method:'get',
+                                    params:{
+                                        userId:this.$myCookie.get("userId")
+                                    }
+                                }).then(res=> {
+                                    console.log("当前用户信息"+JSON.stringify(res))
+                                    this.$store.state.current_user_data = res.data.data
+                                    this.$store.state.current_university.id=this.$store.state.current_user_data.universityId;
+                                    this.$store.state.current_university.description=this.$store.state.current_user_data.universityDescription;
+                                })
+                            }else {
+                                alert("注册失败")
+                            }
+
                         }).catch(error => {
-                            alert('注册失败');
+                            alert('服务端错误');
                             this.$store.state.is_register=true;
                             console.log(error);
                         });

@@ -50,7 +50,7 @@
                             <el-row :span="24" style="padding-top: 15px">
                                 <el-col :span="2">职称:</el-col>
                                 <el-col :span="16">
-                                    <el-input type="text" id="title" placeholder="(teacher/student)" v-model="userInformation.teachTitle"/>
+                                    <el-input type="text" id="title" placeholder="(teacher/student)" v-model="userInformation.role"/>
                                 </el-col>
                             </el-row>
                     </el-row>
@@ -150,17 +150,58 @@
                             <DirectionTag :content="item.directionDescription" :canDelete="true" :directionId="item.directionId"></DirectionTag>
                         </el-col>
                         <el-col :span="4">
-                            <el-input
-                                    class="input-new-tag"
-                                    v-if="inputVisible"
-                                    v-model="inputValue"
-                                    ref="saveTagInput"
-                                    size="small"
-                                    @keyup.enter.native="handleInputConfirm"
-                                    @blur="handleInputConfirm"
-                            >
-                            </el-input>
-                            <el-button v-else class="button-new-tag" size="" @click="showInput">+ New Tag</el-button>
+                            <el-popover
+                                    placement="right"
+                                    width="400"
+                                    trigger="click">
+                                <div>
+                                    <el-input v-model="direction" placeholder="请输入方向关键字"></el-input>
+                                    <el-table
+                                            :data="curDirection"
+                                            height="400"
+                                            border
+                                            style="width: 100%">
+                                        <el-table-column
+                                                prop="directionId"
+                                                label="方向id"
+                                                width="180">
+                                        </el-table-column>
+                                        <el-table-column
+                                                prop="directionDescription"
+                                                label="方向描述"
+                                                width="180">
+                                        </el-table-column>
+                                        <el-table-column
+                                                fixed="right"
+                                                label="操作"
+                                                width="100">
+                                            <template slot-scope="scope">
+                                                <el-button @click="addDirection(curDirection[scope.$index])" type="text"
+                                                           size="small">
+                                                    添加
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                </div>
+                                <el-button slot="reference" class="button-new-tag" size=""><i
+                                        class="el-icon-circle-plus"></i>添加新方向
+                                </el-button>
+                            </el-popover>
+
+<!--                            <el-popover-->
+<!--                                    placement="right"-->
+<!--                                    width="400"-->
+<!--                                    trigger="click">-->
+<!--                                <div>-->
+<!--                                    <el-input v-model="direction" placeholder="请输入方向关键字"></el-input>-->
+<!--                                    <el-row v-for="direction in curDirection" :key="direction.directionId">-->
+<!--                                        <el-button @click="addDirection(direction)" plain>{{direction.directionDescription}}</el-button>-->
+<!--                                    </el-row>-->
+<!--                                </div>-->
+<!--                                <el-button slot="reference" class="button-new-tag" size="">+ 添加新方向</el-button>-->
+<!--                            </el-popover>-->
+
                         </el-col>
                     </el-row>
                 </el-col>
@@ -184,7 +225,7 @@
         data: function () {
             return {
                 inputVisible: false,
-                inputValue: '',
+                direction: "",
                 // {
                 //     "data": {
                 //         "data": {
@@ -249,6 +290,45 @@
             }
         },
         computed: {
+            curDirection(){
+                let directions = [];
+                this.$store.state.directions.forEach(value => {
+                    directions.push(value);
+                })
+
+
+                if (this.direction!==""){
+                    let newDirections = [];
+                    directions.forEach((value) => {
+                        if (value.directionDescription.indexOf(this.direction)!==-1){
+                            newDirections.push(value);
+                            // directions.splice(index,1);
+                        }
+                    })
+                    directions = newDirections;
+                }
+
+                let curDirection = [];
+                this.$store.state.current_user_data.directions.forEach(value => {
+                    curDirection.push(value);
+                })
+
+                let res = [];
+
+                for (let i = 0; i <directions.length ; i++) {
+                    let flag = true;
+                    for (let j = 0; j <curDirection.length ; j++) {
+                        if (curDirection[j].directionId===directions[i].directionId){
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if(flag){
+                        res.push(directions[i]);
+                    }
+                }
+                return res;
+            },
             userInformation: function () {
                 return this.$store.state.current_user_data;
             }
@@ -266,35 +346,38 @@
             // })
         },
         methods: {
-            showInput() {
-                this.inputVisible = true;
-                this.$nextTick(_ => {
-                    alert(_)
-                    this.$refs.saveTagInput.$refs.input.focus();
-                });
+            addDirection(direction){
+                this.$store.state.current_user_data.directions.push(direction);
             },
-
-            handleInputConfirm() {
-                let inputValue = this.inputValue;
-                if (inputValue) {
-                    let obj;
-                    this.$store.state.directions.forEach(value => {
-                        if (value.directionDescription===inputValue){
-                            obj = value;
-                            this.$store.state.current_user_data.directions.forEach(value1 => {
-                                if (value1.directionId===obj.directionId){
-                                    obj = null
-                                }
-                            })
-                        }
-                    })
-                    if (obj){
-                        this.$store.state.current_user_data.directions.push(obj);
-                    }
-                }
-                this.inputVisible = false;
-                this.inputValue = '';
-            },
+            // showInput() {
+            //     this.inputVisible = true;
+            //     this.$nextTick(_ => {
+            //         alert(_)
+            //         this.$refs.saveTagInput.$refs.input.focus();
+            //     });
+            // },
+            //
+            // handleInputConfirm() {
+            //     let inputValue = this.inputValue;
+            //     if (inputValue) {
+            //         let obj;
+            //         this.$store.state.directions.forEach(value => {
+            //             if (value.directionDescription===inputValue){
+            //                 obj = value;
+            //                 this.$store.state.current_user_data.directions.forEach(value1 => {
+            //                     if (value1.directionId===obj.directionId){
+            //                         obj = null
+            //                     }
+            //                 })
+            //             }
+            //         })
+            //         if (obj){
+            //             this.$store.state.current_user_data.directions.push(obj);
+            //         }
+            //     }
+            //     this.inputVisible = false;
+            //     this.inputValue = '';
+            // },
             confirm: function () {
                 console.log("验证教育信息");
                 if (this.userInformation.teachTitle === "student") {

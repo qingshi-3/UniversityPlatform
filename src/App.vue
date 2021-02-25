@@ -29,6 +29,7 @@
       this.getAllGrade();
       this.getAllDirection();
       this.getAllSubject();
+      this.getAllLevel();
     },
     methods:{
       initLogin() {
@@ -53,7 +54,6 @@
           }).then(res => {
             console.log('登陆返回消息'+JSON.stringify(res));
             if (res.data.code !== 404){
-              alert("登录成功")
               this.$store.state.logined = false;
               this.$axios({
                 url:'/api/user/my',
@@ -68,7 +68,6 @@
                 this.$store.state.current_university.description=this.$store.state.current_user_data.universityDescription;
               })
             }else {
-              alert("登录失败")
               this.$store.state.is_login = true;
             }
           }).catch(err =>{
@@ -76,8 +75,8 @@
             this.$store.state.is_login = true;
 
             //用于服务未开的测试
-            this.$store.state.is_login = false
-            this.$store.state.logined = false
+            // this.$store.state.is_login = false
+            // this.$store.state.logined = false
             console.log(err)
           })
         }
@@ -132,7 +131,17 @@
           url:'/api/subject',
           method:'get'
         }).then(res => {
+          console.log("所有学科"+JSON.stringify(res))
           this.$store.state.subjects = res.data.data
+        })
+      },
+      getAllLevel(){
+        this.$axios({
+          url:'/api/project/level',
+          method:'get'
+        }).then(res => {
+          this.$store.state.levels = res.data.data
+          console.log("所有等级"+JSON.stringify(res))
         })
       }
     }
@@ -140,6 +149,9 @@
 </script>
 
 <style>
+  button{
+    cursor: pointer;
+  }
   *{
     margin: 0;
     padding: 0;
@@ -150,5 +162,8 @@
   }
   .mainTabBar{
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+  }
+  textarea{
+    padding:5px 5px 5px 5px;
   }
 </style>

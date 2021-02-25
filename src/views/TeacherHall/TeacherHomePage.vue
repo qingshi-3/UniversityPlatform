@@ -73,30 +73,58 @@
             </el-row>
         </el-row>
         <el-row id="evaluation">
-            <h3>评价</h3>
-            <el-row v-for="evaluation in curEvaluation" :key="evaluation.evaluateId">
-                <el-col :span="5">
-                    <el-rate
-                            v-model="evaluation.evaluateGrade"
-                            disabled
-                            show-score
-                            text-color="#ff9900"
-                            score-template="{evaluation.evaluateGrade}">
-                    </el-rate>
+            <el-row>
+
+                <el-col :span="2">
+                    <h3>评价</h3>
                 </el-col>
-                <el-col :span="15">
-                    <h5 v-text="evaluation.evaluateDescription"></h5>
+                <el-col :span="20">
+                    <el-popover
+                            placement="right"
+                            width="400"
+                            trigger="click">
+                        <div id="review">
+                            <el-row>
+                                <textarea v-model="review.content">
+                                </textarea>
+                            </el-row>
+                            <el-rate v-model="review.score"></el-rate>
+                            <el-row>
+                                <el-button round @click="reviewTeacher()">发表</el-button>
+                            </el-row>
+                        </div>
+                        <button id="popover" slot="reference">发表评价</button>
+                    </el-popover>
                 </el-col>
-                <el-col :span="4">
-                    <p v-text="evaluation.evaluateDate"></p>
-                </el-col>
+            </el-row>
+            <el-row v-for="evaluation in curEvaluation" :key="evaluation.evaluateId" style="margin-top: 40px">
+                <div style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .4);
+                            border-radius: 40px;
+                               width: 1500px;
+                               height: 80px;
+                               margin-left: 100px;
+                            ">
+                    <el-col :span="5" style="margin-top: 25px;padding-left: 25px">
+                        评分
+                        <el-rate
+                                v-model="evaluation.evaluateGrade"
+                                disabled
+                                text-color="#ff9900">
+                        </el-rate>
+                    </el-col>
+                    <el-col :span="13" style="margin-top: 25px">
+                        <h5 style="font-size: 25px" v-text="'评论:'+evaluation.evaluateDescription"></h5>
+                    </el-col>
+                    <el-col :span="6" style="margin-top: 25px">
+                        <p v-text="'评论时间:'+evaluation.evaluateDate"></p>
+                    </el-col>
+                </div>
             </el-row>
             <el-row>
                 <el-pagination
                         class="pager"
                         @current-change="handleCurrentChange"
                         :current-page.sync="currentPage"
-                        :pager-count="6"
                         :page-size="pageSize"
                         :total="teacher.evaluates.length">
                 </el-pagination>
@@ -115,7 +143,12 @@
             return {
                 teacher: null,
                 currentPage: 1,
-                pageSize: 4
+                pageSize: 4,
+                review: {
+                    content: "",
+                    score: null
+                },
+
             }
         },
         computed: {
@@ -123,7 +156,7 @@
                 let _this = this;
                 let evaluations = _this.teacher.evaluates;
                 if (_this.currentPage === _this.totalPage) {
-                    evaluations = evaluations.slice(_this.currentPage * _this.pageSize);
+                    evaluations = evaluations.slice((_this.currentPage-1) * _this.pageSize);
                 } else {
                     evaluations = evaluations.slice((_this.currentPage - 1) * _this.pageSize, _this.currentPage * _this.pageSize);
                 }
@@ -134,6 +167,21 @@
             }
         },
         methods: {
+            reviewTeacher() {
+                alert(this.review.content+this.review.score);
+                this.$axios({
+                    url:'/api/user/evaluate',
+                    method:'put',
+                    params:{
+                        userId:this.$store.state.current_user_data.userId,
+                        teacherId:this.teacher.userId,
+                        evaluateGrade:this.review.score,
+                        evaluateDescription:this.review.content
+                    }
+                }).then(res=>{
+                    console.log("评价成功"+JSON.stringify(res));
+                })
+            },
             handleCurrentChange(newPage) {
                 this.currentPage = newPage
             },
@@ -144,7 +192,7 @@
                 this.$router.push({path: '/projectHomePage', query: {projectId: projectId}})
             },
             applyNewProject() {
-
+                this.$router.push({path: '/editProject', query: {teacher: this.teacher}})
             }
         },
         created() {
@@ -164,6 +212,49 @@
 </script>
 
 <style scoped>
+    #popover {
+        margin-left: 1400px;
+        width: 120px;
+        height: 40px;
+
+        background-color: white;
+        font-size: 18px;
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .4);
+        border-style: none;
+        border-radius: 40px;
+
+        cursor: pointer;
+        outline: none;
+    }
+    #review textarea{
+        resize: vertical;
+        outline-style: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .4);
+        border-width: 0;
+        font-size: 20px;
+        width: 385px;
+        height: 140px;
+        padding-left: 5px;
+        padding-top: 5px;
+    }
+
+    button {
+        width: 120px;
+        height: 40px;
+
+        background-color: white;
+        font-size: 18px;
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .4);
+        border-style: none;
+        border-radius: 40px;
+
+        cursor: pointer;
+        outline: none;
+    }
+
     #introduction {
         height: 300px;
         width: 84%;
@@ -278,7 +369,7 @@
 
     .pager {
 
-        padding-top: 30px;
+        margin-top: 50px;
         text-align: center
     }
 </style>

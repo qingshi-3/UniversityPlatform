@@ -1,7 +1,7 @@
 <template>
     <!--  导师大厅、同学大厅的预览  -->
     <div id="box" @click="viewPersonHomePage()">
-        <el-row>
+        <el-row style="padding-top: 10px">
             <el-col :span="10">
                 <el-row style="padding:20px 20px 20px 20px;">
                     <h1 v-text="person.name"></h1>
@@ -11,7 +11,7 @@
                 </el-row>
             </el-col>
             <el-col :span="6" :offset="4">
-                <el-avatar :size="140" :src="person.avatarUrl"></el-avatar>
+                <el-avatar :size="120" :src="person.avatarUrl"></el-avatar>
             </el-col>
         </el-row>
         <el-row id="directions">

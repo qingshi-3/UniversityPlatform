@@ -20,7 +20,9 @@ const store = new Vuex.Store({
         subjects:[],
         universities:[],
         active:"idea",
-        projectStatus:["可加入","不可加入"]
+        noticeActive:"notice",
+        projectStatus:["可加入","不可加入"],
+        levels:[],
     },
     getters:{
         logined: state => {

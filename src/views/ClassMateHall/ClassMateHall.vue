@@ -5,6 +5,9 @@
             <el-col :span="3">
                 <label>
                     <select v-model="collegeId" @change="collegeChange">
+
+                        <option value="" disabled selected>学院</option>
+                        <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.colleges"
                                 :key="item.collegeId"
@@ -17,6 +20,8 @@
             <el-col :span="3">
                 <label>
                     <select v-model="directionId" @change="directionChange">
+                        <option value="" disabled selected>方向</option>
+                        <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.directions"
                                 :key="item.directionId"
@@ -29,7 +34,10 @@
 
             <el-col :span="3">
                 <label>
-                    <select v-model="grade" @change="directionChange">
+                    <select v-model="grade" @change="gradeChange">
+
+                        <option value="" disabled selected>年级</option>
+                        <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.grades"
                                 :key="item.gradeId"
@@ -41,7 +49,7 @@
             </el-col>
 
             <el-col :span="8" :offset="7">
-                <button v-if="clickSearch" @click="clickSearch = false"><i class="el-icon-search"></i></button>
+                <button v-if="clickSearch" @click="clickSearch = false" style="background-color: white"><i class="el-icon-search"></i></button>
                 <input v-else @keyup.enter="search" @change="watchSearchContent()" class="search_input"
                        placeholder="请输入要搜索的同学名字"
                        v-model="studentName"/>
@@ -85,6 +93,13 @@
                 clickSearch: true,
                 grade:null,
                 students: [],
+                universityId:this.$store.state.current_university.id,
+
+            }
+        },
+        watch:{
+            universityId(o,n){
+                alert(o+" "+n);
             }
         },
         methods: {
@@ -102,17 +117,23 @@
             handleCurrentChange(newPage) {
                 this.page.currentPage = newPage;
             },
-            collegeChange() {
+            gradeChange(){
+                if (this.grade==="")
+                    this.grade = null;
+                this.handleCurrentChange(1);
+                this.getStudents();
+            },
+            collegeChange(){
+                if (this.collegeId==="")
+                    this.collegeId = null;
                 this.handleCurrentChange(1);
                 this.getStudents();
             },
             directionChange() {
+                if (this.directionId==="")
+                    this.directionId = null;
                 this.handleCurrentChange(1);
                 this.getStudents();
-            },
-            universityChange() {
-                this.handleCurrentChange(1);
-                this.getStudents()
             },
             getStudents() {
                 let _this = this;
@@ -124,7 +145,7 @@
                         universityId: this.$store.state.current_university.id,
                         role: "student",
                         gradeId: this.grade,
-                        name: this.teacherName,
+                        name: this.studentName,
                         directionId: this.directionId,
                         collegeId: this.collegeId
                     }
@@ -157,7 +178,7 @@
                 url: 'api/user',
                 method: "get",
                 params: {
-                    universityId: null,//this.$store.state.current_university.id,
+                    universityId: this.$store.state.current_university.id,
                     role: "student",
                     name: null,
                     gradeId:null,

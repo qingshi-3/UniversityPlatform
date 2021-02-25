@@ -30,6 +30,11 @@ const ClassMateHomePage = () => import('@/views/ClassMateHall/ClassMateHomePage'
 const ProjectHomePage = () => import('@/views/ProjectHall/ProjectHomePage')
 const ProjectHall = () => import('@/views/ProjectHall/ProjectHall')
 const ManageMyIdeaOrProject = () => import('@/views/ManageMyIdeaOrProject/ManageMyIdeaOrProject')
+const EditProject = () => import('@/views/ManageMyIdeaOrProject/EditProject')
+const NoticeList = () => import('@/views/NoticeList/NoticeList')
+const IdeaHall = () => import('@/views/IdeaHall/IdeaHall')
+const IdeaHomePage = () => import('@/views/IdeaHall/IdeaHomePage')
+const EditIdea = () => import('@/views/ManageMyIdeaOrProject/EditIdea')
 
 const routes = [
     {
@@ -37,8 +42,28 @@ const routes = [
         redirect: ''
     },
     {
-      path: '/manageMyIdeaOrProject',
-      component :ManageMyIdeaOrProject
+        path: '/editIdea',
+        component: EditIdea
+    },
+    {
+        path: '/ideaHomePage',
+        component: IdeaHomePage
+    },
+    {
+        path: '/ideaHall',
+        component: IdeaHall
+    },
+    {
+        path: '/noticeList',
+        component: NoticeList
+    },
+    {
+        path: '/editProject',
+        component: EditProject
+    },
+    {
+        path: '/manageMyIdeaOrProject',
+        component: ManageMyIdeaOrProject
     },
     {
         path: '/classMateHomePage',

@@ -5,6 +5,8 @@
             <el-col :span="3">
                 <label>
                     <select v-model="collegeId" @change="collegeChange">
+                        <option value="" disabled selected>学院</option>
+                        <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.colleges"
                                 :key="item.collegeId"
@@ -17,6 +19,8 @@
             <el-col :span="3">
                 <label>
                     <select v-model="directionId" @change="directionChange">
+                        <option value="" disabled selected>方向</option>
+                        <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.directions"
                                 :key="item.directionId"
@@ -27,7 +31,7 @@
                 </label>
             </el-col>
             <el-col :span="8" :offset="10">
-                <button v-if="clickSearch" @click="clickSearch = false"><i class="el-icon-search"></i></button>
+                <button v-if="clickSearch" @click="clickSearch = false" style="background-color: white"><i class="el-icon-search"></i></button>
                 <input v-else @keyup.enter="search" @change="watchSearchContent()" class="search_input"
                        placeholder="请输入要搜索的老师名字"
                        v-model="teacherName"/>
@@ -87,18 +91,17 @@
             handleCurrentChange(newPage) {
                 this.page.currentPage = newPage;
             },
-            collegeChange() {
+            collegeChange(){
+                if (this.collegeId==="")
+                    this.collegeId = null;
                 this.handleCurrentChange(1);
                 this.getTeachers();
             },
-            directionChange() {
+            directionChange(){
+                if (this.directionId==="")
+                    this.directionId = null;
                 this.handleCurrentChange(1);
-                this.getTeachers();
-            },
-            universityChange() {
-                this.handleCurrentChange(1);
-                this.getTeachers()
-            },
+                this.getTeachers();},
             getTeachers() {
                 let _this = this;
                 alert("学院id" + this.collegeId + " 方向id" + this.directionId);
@@ -138,7 +141,7 @@
                 url: 'api/user',
                 method: "get",
                 params: {
-                    universityId: null,//this.$store.state.current_university.id,
+                    universityId: this.$store.state.current_university.id,
                     role: "teacher",
                     name: null,
                     directionId: null,
