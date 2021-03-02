@@ -5,7 +5,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="collegeId" @change="collegeChange()">
-                        <option value="" disabled selected>学院</option>
+                        <option value="学院" disabled>学院</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.colleges"
@@ -20,7 +20,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="subject" @change="subjectChange()">
-                        <option value="" disabled selected>学科</option>
+                        <option value="学科" disabled>学科</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.subjects"
@@ -35,7 +35,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="level" @change="levelChange()">
-                        <option value="" disabled selected>等级</option>
+                        <option value="等级" disabled>等级</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.levels"
@@ -50,7 +50,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="projectStatus" @change="projectStatusChange()">
-                        <option value="" disabled selected>是否可加入</option>
+                        <option value="是否可加入" disabled>是否可加入</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.projectStatus"
@@ -121,10 +121,10 @@
                     currentPage: 1,
                     pageSize: 12
                 },
-                collegeId: null,
-                subject: null,
-                level: null,
-                projectStatus: null,
+                collegeId: "学院",
+                subject: "学科",
+                level: "等级",
+                projectStatus: "是否可加入",
                 projectName: null,
                 clickSearch: true,
                 projects: [],
@@ -153,28 +153,28 @@
             },
             collegeChange() {
                 if (this.collegeId===""){
-                    this.collegeId = null
+                    this.collegeId = "学院"
                 }
                 this.handleCurrentChange(1);
                 this.getProjects()
             },
             projectStatusChange() {
                 if (this.projectStatus===""){
-                    this.projectStatus = null
+                    this.projectStatus = "是否可加入"
                 }
                 this.handleCurrentChange(1);
                 this.getProjects()
             },
             levelChange() {
                 if (this.level===""){
-                    this.level = null
+                    this.level = "等级"
                 }
                 this.handleCurrentChange(1);
                 this.getProjects()
             },
             subjectChange() {
                 if (this.subject===""){
-                    this.subject = null
+                    this.subject = "学科"
                 }
                 this.handleCurrentChange(1);
                 this.getProjects()
@@ -188,10 +188,10 @@
                     params: {
                         // universityId: _this.$store.state.current_university.id,
                         projectTitle: _this.projectName,
-                        subject: _this.subject,
-                        level: _this.level,
-                        status: _this.projectStatus,
-                        collegeId: _this.collegeId
+                        subject: _this.subject==="学科"?null:_this.subject,
+                        level: _this.level==="等级"?null:_this.level,
+                        status: _this.projectStatus==="是否可加入"?null:_this.projectStatus,
+                        collegeId: _this.collegeId==="学院"?null:_this.collegeId
                     }
                 }).then(res => {
                     _this.projects = res.data.data;

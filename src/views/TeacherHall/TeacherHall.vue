@@ -5,7 +5,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="collegeId" @change="collegeChange">
-                        <option value="" disabled selected>学院</option>
+                        <option value="学院" disabled>学院</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.colleges"
@@ -19,7 +19,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="directionId" @change="directionChange">
-                        <option value="" disabled selected>方向</option>
+                        <option value="方向" disabled >方向</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.directions"
@@ -69,8 +69,8 @@
                     currentPage: 1,
                     pageSize: 12
                 },
-                collegeId: null,
-                directionId: null,
+                collegeId: "学院",
+                directionId: "方向",
                 teacherName: null,
                 clickSearch: true,
                 teachers: []
@@ -93,18 +93,17 @@
             },
             collegeChange(){
                 if (this.collegeId==="")
-                    this.collegeId = null;
+                    this.collegeId = "学院";
                 this.handleCurrentChange(1);
                 this.getTeachers();
             },
             directionChange(){
                 if (this.directionId==="")
-                    this.directionId = null;
+                    this.directionId = "方向";
                 this.handleCurrentChange(1);
                 this.getTeachers();},
             getTeachers() {
                 let _this = this;
-                alert("学院id" + this.collegeId + " 方向id" + this.directionId);
                 this.$axios({
                     url: 'api/user',
                     method: "get",
@@ -112,8 +111,8 @@
                         universityId: this.$store.state.current_university.id,
                         role: "teacher",
                         name: this.teacherName,
-                        directionId: this.directionId,
-                        collegeId: this.collegeId
+                        directionId: this.directionId==="方向"?null:this.directionId,
+                        collegeId: this.collegeId==="学院"?null:this.collegeId
                     }
                 }).then(res => {
                     _this.teachers = res.data.data;

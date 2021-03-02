@@ -8,7 +8,7 @@
             <textarea disabled v-text="idea.ideaContent"></textarea>
         </el-row>
         <el-row style="margin-top: 20px;margin-left: 40px">
-            <el-col :span="3" v-for="subject in curSubjects" :key="subject.subjectId">
+            <el-col :span="2" v-for="subject in curSubjects" :key="subject.subjectId">
                 <DirectionTag :content="subject.subjectDescription"></DirectionTag>
             </el-col>
         </el-row>
@@ -85,12 +85,16 @@
 </script>
 
 <style scoped>
+    *{
+        background-color: white;
+    }
     #box{
         border-radius: 10px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .6);
         height: 300px;
         width: 1500px;
         padding-bottom: 20px;
+        margin-bottom: 10px;
     }
     textarea{
         resize: none;

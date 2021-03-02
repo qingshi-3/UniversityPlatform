@@ -5,8 +5,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="collegeId" @change="collegeChange">
-
-                        <option value="" disabled selected>学院</option>
+                        <option value="学院" disabled>学院</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.colleges"
@@ -20,7 +19,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="directionId" @change="directionChange">
-                        <option value="" disabled selected>方向</option>
+                        <option value="方向" disabled >方向</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.directions"
@@ -35,8 +34,7 @@
             <el-col :span="3">
                 <label>
                     <select v-model="grade" @change="gradeChange">
-
-                        <option value="" disabled selected>年级</option>
+                        <option value="年级" disabled >年级</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.grades"
@@ -87,19 +85,14 @@
                     currentPage: 1,
                     pageSize: 12
                 },
-                collegeId: null,
-                directionId: null,
+                collegeId: "学院",
+                directionId: "方向",
                 studentName: null,
                 clickSearch: true,
-                grade:null,
+                grade:"年级",
                 students: [],
                 universityId:this.$store.state.current_university.id,
 
-            }
-        },
-        watch:{
-            universityId(o,n){
-                alert(o+" "+n);
             }
         },
         methods: {
@@ -119,19 +112,19 @@
             },
             gradeChange(){
                 if (this.grade==="")
-                    this.grade = null;
+                    this.grade = "年级";
                 this.handleCurrentChange(1);
                 this.getStudents();
             },
             collegeChange(){
                 if (this.collegeId==="")
-                    this.collegeId = null;
+                    this.collegeId = "学院";
                 this.handleCurrentChange(1);
                 this.getStudents();
             },
             directionChange() {
                 if (this.directionId==="")
-                    this.directionId = null;
+                    this.directionId = "方向";
                 this.handleCurrentChange(1);
                 this.getStudents();
             },
@@ -144,10 +137,10 @@
                     params: {
                         universityId: this.$store.state.current_university.id,
                         role: "student",
-                        gradeId: this.grade,
+                        gradeId: this.grade==="年级"?null:this.grade,
                         name: this.studentName,
-                        directionId: this.directionId,
-                        collegeId: this.collegeId
+                        directionId: this.directionId==="方向"?null:this.directionId,
+                        collegeId: this.collegeId==="学院"?null:this.collegeId
                     }
                 }).then(res => {
                     _this.students = res.data.data;

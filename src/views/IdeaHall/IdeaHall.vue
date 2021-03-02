@@ -4,9 +4,8 @@
         <el-row id="header">
             <el-col :span="3">
                 <label>
-                    <select v-model="collegeId" @change="collegeChange">
-
-                        <option value="" disabled selected>学院</option>
+                    <select v-model="collegeId" @change="collegeChange" >
+                        <option value="学院" disabled>学院</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.colleges"
@@ -19,8 +18,8 @@
             </el-col>
             <el-col :span="3">
                 <label>
-                    <select v-model="subjectId" @change="directionChange">
-                        <option value="" disabled selected>学科</option>
+                    <select v-model="subjectId" @change="subjectChange">
+                        <option value="学科" disabled >学科</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in this.$store.state.subjects"
@@ -34,8 +33,8 @@
 
             <el-col :span="3">
                 <label>
-                    <select v-model="sortText" @change="directionChange">
-                        <option value="" disabled selected>按时间排序</option>
+                    <select v-model="sortText" @change="sortChange">
+                        <option value="按时间排序" disabled>按时间排序</option>
                         <option value="">重置</option>
                         <option
                                 v-for="item in sort"
@@ -72,13 +71,13 @@
         components: {IdeaPreview},
         data() {
             return {
-                collegeId: null,
-                subjectId: null,
+                collegeId: "学院",
+                subjectId: "学科",
                 clickSearch: true,
                 ideaTitle:null,
                 universityId:this.$store.state.current_university.id,
                 ideas:[],
-                sortText:null,
+                sortText:"按时间排序",
                 sort:["是","否"]
             }
         },
@@ -101,19 +100,19 @@
                     this.clickSearch = true;
                 this.getIdeas();
             },
-            gradeChange(){
-                if (this.grade==="")
-                    this.grade = null;
+            subjectChange(){
+                if (this.subjectId==="")
+                    this.subjectId = "学科";
                 this.getIdeas();
             },
             collegeChange(){
                 if (this.collegeId==="")
-                    this.collegeId = null;
+                    this.collegeId = "学院";
                 this.getIdeas();
             },
-            directionChange() {
-                if (this.directionId==="")
-                    this.directionId = null;
+            sortChange() {
+                if (this.sortText==="")
+                    this.sortText = "按时间排序";
                 this.getIdeas();
             },
             getIdeas() {
@@ -123,10 +122,10 @@
                     method: "get",
                     params: {
                         ideaTitle:_this.ideaTitle,
-                        subjectId:_this.subjectId,
+                        subjectId:_this.subjectId==="学科"?null:_this.subjectId,
                         sort:_this.isSort,
                         universityId: this.$store.state.current_university.id,
-                        collegeId: this.collegeId
+                        collegeId: this.collegeId==="学院"?null:this.collegeId
                     }
                 }).then(res => {
                     _this.ideas = res.data.data;
@@ -140,7 +139,9 @@
             isSort(){
                 if (this.sortText==="是"){
                     return true;
-                }else {
+                }if (this.sortText==="按时间排序"){
+                    return null;
+                } else {
                     return false;
                 }
             }
